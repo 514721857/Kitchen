@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/colorPrimary"
+    android:layout_width="match_parent"
+    android:layout_height="60dp">
+
+        <TextView
+            android:visibility="gone"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:text="配送"
+            android:id="@+id/top_view_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="20dp" />
+
+        <TextView
+            android:text="厨房系统"
+            android:textColor="@android:color/white"
+            android:id="@+id/top_view_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/top_view_right_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center"
+            android:layout_marginRight="10dp"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:text="注销"
+           />
+
+    </FrameLayout>
