@@ -59,6 +59,7 @@ import net.posprinter.service.PosprinterService;
 import net.posprinter.utils.DataForSendToPrinterTSC;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -603,6 +604,9 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
                 if (isConnect) {
 
                     try {
+
+//                        DataForSendToPrinterTSC.p
+
                         binder.write(PrintContent(temp1), new UiExecute() {//打印
 
                             @Override
@@ -697,16 +701,29 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
         buf.append("\r\n");
         buf.append(result.getSummary());
         buf.append("\r\n");
-        buf.append( "下单："+ OrderStatus.TimeFormat(result.getGmtCreate()));
+        buf.append( "下单时间："+ OrderStatus.TimeFormat(result.getGmtCreate()));
         buf.append("\r\n");
-        buf.append( "送达："+ OrderStatus.TimeFormat(result.getSendTime()));
+//        buf.append( "送达时间："+ OrderStatus.TimeFormat(result.getSendTime()));
         String results=buf.toString();
 
         System.out.println("打印内容"+results);
-        return results.getBytes();
+        return strTobytes(results);
 
     }
-
+    /**
+     * 字符串转byte数组
+     * */
+    public static byte[] strTobytes(String str){
+        byte[] b=null,data=null;
+        try {
+            b = str.getBytes("utf-8");
+            data=new String(b,"utf-8").getBytes("gbk");
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return data;
+    }
     private void getBuff(String str,StringBuffer buf) {
 
         if(str.contains("+")){
