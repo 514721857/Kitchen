@@ -686,9 +686,17 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
         }else{
             buf.setLength(0);
         }
+        buf.append(" ");
+        buf.append("\r\n");
+        buf.append(" ");
+        buf.append("\r\n");
         buf.append(result.getUsername());
         buf.append("\r\n");
+        buf.append(" ");
+        buf.append("\r\n");
         buf.append(result.getPhone());
+        buf.append("\r\n");
+        buf.append(" ");
         buf.append("\r\n");
         buf.append(result.getAddress());
         buf.append("\r\n");
@@ -701,8 +709,13 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
         buf.append("\r\n");
         buf.append(result.getSummary());
         buf.append("\r\n");
-        buf.append( "下单时间："+ OrderStatus.TimeFormat(result.getGmtCreate()));
+        buf.append( "送达时间："+ OrderStatus.TimeFormat(result.getSendTime()));
         buf.append("\r\n");
+        buf.append(" ");
+        buf.append("\r\n");
+        buf.append(" ");
+        buf.append("\r\n");
+//        result.getGmtCreate()
 //        buf.append( "送达时间："+ OrderStatus.TimeFormat(result.getSendTime()));
         String results=buf.toString();
 
