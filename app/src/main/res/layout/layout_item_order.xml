@@ -134,12 +134,12 @@
                             android:id="@+id/lin_3"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-
+                            android:layout_margin="10dp"
                             android:layout_centerVertical="true"
                             android:orientation="horizontal">
 
                                 <Button
-                                    android:layout_margin="10dp"
+
                                     android:layout_weight="1.0"
                                     android:id="@+id/order_btn_phone"
                                     android:layout_width="wrap_content"
@@ -150,7 +150,7 @@
 
                                 <Button
                                     android:layout_weight="1.0"
-                                    android:layout_margin="10dp"
+                                   android:layout_marginLeft="10dp"
                                     android:id="@+id/order_list_zt"
                                     android:layout_width="wrap_content"
                                     android:layout_height="30dp"

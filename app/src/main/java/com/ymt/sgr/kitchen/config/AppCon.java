@@ -10,6 +10,8 @@ import android.os.Environment;
 public class AppCon {
     public static final String USER_KEY = "user";
     public static final String SCCESS_TOKEN_KEY = "access_token";
+    public static final String USER_NAME = "user_name";
+    public static final String USER_PWD= "user_pwd";
 
     public static final int ENABLE_BLUETOOTH=1;//蓝牙
 
