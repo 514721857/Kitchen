@@ -129,15 +129,18 @@
 
 
                         <LinearLayout
-                            android:layout_marginRight="10dp"
+                            android:layout_below="@id/lin_1"
+
                             android:id="@+id/lin_3"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
+
                             android:layout_centerVertical="true"
-                            android:orientation="vertical">
+                            android:orientation="horizontal">
 
                                 <Button
+                                    android:layout_margin="10dp"
+                                    android:layout_weight="1.0"
                                     android:id="@+id/order_btn_phone"
                                     android:layout_width="wrap_content"
                                     android:layout_height="30dp"
@@ -146,12 +149,14 @@
 
 
                                 <Button
-                                    android:layout_marginTop="20dp"
+                                    android:layout_weight="1.0"
+                                    android:layout_margin="10dp"
                                     android:id="@+id/order_list_zt"
                                     android:layout_width="wrap_content"
                                     android:layout_height="30dp"
                                     android:background="@drawable/touch_bg"
                                     android:text="状态" />
+
                         </LinearLayout>
 
 
