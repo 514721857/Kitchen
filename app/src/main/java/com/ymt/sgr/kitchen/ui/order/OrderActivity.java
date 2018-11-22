@@ -11,11 +11,13 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.IBinder;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -47,8 +49,7 @@ import com.ymt.sgr.kitchen.ui.LoginActivity;
 import com.ymt.sgr.kitchen.ui.adapter.OrderListAdapter;
 import com.ymt.sgr.kitchen.util.OrderStatus;
 import com.ymt.sgr.kitchen.util.StartActivityUtil;
-
-
+import com.ymt.sgr.kitchen.util.ToastUtils;
 
 
 import net.posprinter.posprinterface.IMyBinder;
@@ -90,8 +91,73 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
 
 
 
+    @BindView(R.id.order_text_dzz)
+    TextView order_text_dzz;
+
+    @BindView(R.id.order_text_dps)
+    TextView order_text_dps;
+
+    @BindView(R.id.order_text_zzz)
+    TextView order_text_zzz;
+
+
+
+    @BindView(R.id.zq_dzz)
+    TextView zq_dzz;
+
+    @BindView(R.id.zq_zzz)
+    TextView zq_zzz;
+
+    @BindView(R.id.zq_dqc)
+    TextView zq_dqc;
+
+    @BindView(R.id.zq_yqc)
+    TextView zq_yqc;
+
     @BindView(R.id.top_view_left)
     TextView top_view_left;
+
+
+    @BindView(R.id.order_btn_wm)
+    Button order_btn_wm;
+
+    @BindView(R.id.order_btn_zq)
+    Button order_btn_zq;
+
+    @BindView(R.id.wm_bottom_view)
+    View wm_bottom_view;
+
+    @BindView(R.id.zq_bottom_view)
+    View zq_bottom_view;
+
+
+    private  boolean isWm,isZq;
+
+
+    //设置默认
+    private void setMoren(){
+
+
+            isWm=true;
+            order_btn_wm.setTextColor(ContextCompat.getColor(this, R.color.colorRed));
+            order_btn_zq.setTextColor(ContextCompat.getColor(this, R.color.bottom_text));
+            wm_bottom_view.setVisibility(View.VISIBLE);
+            zq_bottom_view.setVisibility(View.GONE);
+            setWmChoice(0);
+            setzQChoice(0);
+
+
+  /*      if(isZq){
+            order_btn_zq.setTextColor(ContextCompat.getColor(this, R.color.colorRed));
+            order_btn_wm .setTextColor(ContextCompat.getColor(this, R.color.bottom_text));
+            isWm=false;
+        }else{
+            order_btn_wm.setTextColor(ContextCompat.getColor(this, R.color.colorRed));
+            order_btn_zq.setTextColor(ContextCompat.getColor(this, R.color.bottom_text));
+            isZq=false;
+        }*/
+    }
+
 
 
     private String headers[] = {"外卖", "自取"};
@@ -140,10 +206,59 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
     protected int setLayoutId() {
         return R.layout.activity_main;
     }
-    @OnClick({R.id.result,R.id.top_view_right_text,R.id.top_view_left})
+    @OnClick({R.id.top_view_right_text,R.id.layout_zq_dqc,R.id.layout_zq_zzz,R.id.layout_zq_dzz,R.id.layout_dps,R.id.layout_zzz,R.id.layout_dzz
+            ,R.id.top_view_left,R.id.layout_zq_yqc,R.id.order_btn_wm,R.id.order_btn_zq})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.result:
+            case R.id.order_btn_wm://外卖
+              if(!isWm){
+                  order_btn_wm.setTextColor(ContextCompat.getColor(this, R.color.colorRed));
+                  order_btn_zq .setTextColor(ContextCompat.getColor(this, R.color.bottom_text));
+                  wm_bottom_view.setVisibility(View.VISIBLE);
+                  zq_bottom_view.setVisibility(View.GONE);
+                  isZq=false;
+
+              }
+                break;
+            case R.id.order_btn_zq://自取
+                if(!isZq){
+                    order_btn_zq.setTextColor(ContextCompat.getColor(this, R.color.colorRed));
+                    order_btn_wm .setTextColor(ContextCompat.getColor(this, R.color.bottom_text));
+                    zq_bottom_view.setVisibility(View.VISIBLE);
+                    wm_bottom_view .setVisibility(View.GONE);
+                    isWm=false;
+
+                }
+//                setzQChoice(3);
+                break;
+
+            case R.id.layout_zq_yqc://已取餐
+                setzQChoice(3);
+                break;
+            case R.id.layout_zq_dqc://待取餐
+                setzQChoice(2);
+                break;
+            case R.id.layout_zq_zzz://自取 制作中
+                setzQChoice(1);
+                break;
+
+            case R.id.layout_zq_dzz:// 自取待制作
+                setzQChoice(0);
+                break;
+
+            /////////////////////////////////////////////外卖
+            case R.id.layout_dps:// 待配送
+
+                setWmChoice(2);
+                break;
+            case R.id.layout_zzz:// 制作中
+                setWmChoice(1);
+                break;
+            case R.id.layout_dzz:// 待制作
+                setWmChoice(0);
+
+                break;
+     /*       case R.id.result:
 
 
                 new CommonModel(this).getSave(new HttpUtils.OnHttpResultListener() {
@@ -184,11 +299,44 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
                 }
 
 
-                break;
+                break;*/
 
         }
     }
+    private void setzQChoice(int i){
+        clearZq();
+        if(i==0){
+            zq_dzz.setTextColor(ContextCompat.getColor(this, R.color.colorRed));
+        }else if(i==1){
+            zq_zzz.setTextColor(ContextCompat.getColor(this, R.color.colorRed));
+        }else if(i==2){
+            zq_dqc.setTextColor(ContextCompat.getColor(this, R.color.colorRed));
+        }else if(i==3){
+            zq_yqc.setTextColor(ContextCompat.getColor(this, R.color.colorRed));
+        }
+    }
+    private void clearZq(){
+        zq_yqc.setTextColor(ContextCompat.getColor(this, R.color.bottom_text));
+        zq_dqc.setTextColor(ContextCompat.getColor(this, R.color.bottom_text));
+        zq_zzz.setTextColor(ContextCompat.getColor(this, R.color.bottom_text));
+        zq_dzz.setTextColor(ContextCompat.getColor(this, R.color.bottom_text));
+    }
 
+    private void setWmChoice(int i){
+        clearWm();
+        if(i==0){
+            order_text_dzz.setTextColor(ContextCompat.getColor(this, R.color.colorRed));
+        }else if(i==1){
+            order_text_zzz.setTextColor(ContextCompat.getColor(this, R.color.colorRed));
+        }else if(i==2){
+            order_text_dps.setTextColor(ContextCompat.getColor(this, R.color.colorRed));
+        }
+    }
+    private void clearWm(){
+        order_text_dzz.setTextColor(ContextCompat.getColor(this, R.color.bottom_text));
+        order_text_dps.setTextColor(ContextCompat.getColor(this, R.color.bottom_text));
+        order_text_zzz.setTextColor(ContextCompat.getColor(this, R.color.bottom_text));
+    }
 
     protected void setbluetooth() {
         // TODO Auto-generated method stub
@@ -377,6 +525,7 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
         Intent intent=new Intent(this,PosprinterService.class);
         bindService(intent, conn, BIND_AUTO_CREATE);
         top_view_left.setText(getString(R.string.unconnect));
+        setMoren();
 //        getPresenter().getAddress1();
         //init city menu
 

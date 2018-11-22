@@ -11,21 +11,67 @@
     <include layout="@layout/top_view"
         android:id="@+id/top_view"
         />
-    <FrameLayout
-        android:id="@+id/content"
+    <LinearLayout
+        android:id="@+id/lin_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_centerVertical="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:textColor="@color/bottom_text"
+            android:layout_marginRight="15dp"
+             android:layout_marginLeft="20dp"
+            android:layout_weight="1.0"
+            android:id="@+id/order_btn_wm"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:background="@drawable/touch_bg"
+            android:text="外卖" />
+
+
+        <Button
+            android:textColor="@color/bottom_text"
+           android:layout_marginRight="20dp"
+            android:layout_weight="1.0"
+            android:layout_marginLeft="15dp"
+            android:id="@+id/order_btn_zq"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:background="@drawable/touch_bg"
+            android:text="自取" />
+
+    </LinearLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+
+
+        android:id="@+id/swipeLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" >
-    </FrameLayout>
+        android:layout_weight="1"
+        android:orientation="vertical"
+        >
 
+        <android.support.v7.widget.RecyclerView
+
+            android:id="@+id/rv_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <include layout="@layout/wm_bottom_view"
         android:visibility="gone"
-        android:id="@+id/zq_bottom_view"
-        />
-    <include layout="@layout/zq_bottom_view"
         android:id="@+id/wm_bottom_view"
         />
+    <include layout="@layout/zq_bottom_view"
+        android:visibility="gone"
+        android:id="@+id/zq_bottom_view"
+
+        />
+
+
 
 
 </LinearLayout>

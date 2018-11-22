@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/color_gray_line"
     android:layout_width="match_parent"
     android:layout_height="50dp">
 
@@ -16,13 +17,13 @@
 
         <RelativeLayout
             android:gravity="center"
-            android:id="@+id/verify_layout"
+            android:id="@+id/layout_dzz"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" >
 
                 <TextView
-                    android:id="@+id/verify_text"
+                    android:id="@+id/order_text_dzz"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -36,7 +37,7 @@
 
         <RelativeLayout
             android:gravity="center"
-            android:id="@+id/sign_layout"
+            android:id="@+id/layout_zzz"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" >
@@ -44,7 +45,7 @@
 
 
                 <TextView
-                    android:id="@+id/sign_text"
+                    android:id="@+id/order_text_zzz"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -58,13 +59,13 @@
         <RelativeLayout
             android:gravity="center"
             android:layout_gravity="center"
-            android:id="@+id/video_layout"
+            android:id="@+id/layout_dps"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" >
 
                 <TextView
-                    android:id="@+id/video_text"
+                    android:id="@+id/order_text_dps"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
