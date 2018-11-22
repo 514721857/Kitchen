@@ -12,6 +12,7 @@ public class AppCon {
     public static final String SCCESS_TOKEN_KEY = "access_token";
     public static final String USER_NAME = "user_name";
     public static final String USER_PWD= "user_pwd";
+    public static final String USER_SHOP_ID= "shop_id";
 
     public static final int ENABLE_BLUETOOTH=1;//蓝牙
 

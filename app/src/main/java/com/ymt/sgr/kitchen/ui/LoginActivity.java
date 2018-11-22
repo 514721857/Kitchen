@@ -18,6 +18,7 @@ import com.ymt.sgr.kitchen.model.Result;
 import com.ymt.sgr.kitchen.model.User;
 import com.ymt.sgr.kitchen.ui.order.OrderActivity;
 import com.ymt.sgr.kitchen.util.StartActivityUtil;
+import com.ymt.sgr.kitchen.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,6 +63,9 @@ public class LoginActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.login_bt_commit://登录
 
+                StartActivityUtil.skipAnotherActivity(LoginActivity.this,OrderActivity.class);
+                finish();
+
                 if(login_ed_usename.getText().toString().equals("")){
                     Toast.makeText(LoginActivity.this,"请输入用户名",Toast.LENGTH_SHORT).show();
                 }else if(login_ed_password.getText().toString().equals("")){
@@ -73,14 +77,24 @@ public class LoginActivity extends AppCompatActivity {
                     commonModel.getLogin(user, new HttpUtils.OnHttpResultListener() {
                         @Override
                         public void onResult(Object result) {
-                           Result<String> temp=(Result<String>)result;
+                           Result<User> temp=(Result<User>)result;
                            if(temp.status.equals("200")){
-                               editor.putString(AppCon.SCCESS_TOKEN_KEY,temp.content);
-                               editor.putString(AppCon.USER_NAME,login_ed_usename.getText().toString());
-                               editor.putString(AppCon.USER_PWD,login_ed_password.getText().toString());
-                               editor.commit();
-                               StartActivityUtil.skipAnotherActivity(LoginActivity.this,OrderActivity.class);
-                               finish();
+
+                               if(!temp.content.getEnabled().equals("1")){
+                                   ToastUtils.showLong("该账户已被停用");
+                               }else if(!temp.content.getRole().equals("1")){
+                                   ToastUtils.showLong("请用厨房账号登录");
+                               }else{
+                                   editor.putString(AppCon.SCCESS_TOKEN_KEY,temp.content.getToken());
+                                   editor.putString(AppCon.USER_NAME,login_ed_usename.getText().toString());
+                                   editor.putString(AppCon.USER_PWD,login_ed_password.getText().toString());
+                                   editor.putString(AppCon.USER_SHOP_ID,temp.content.getShopId());
+                                   editor.commit();
+                                   StartActivityUtil.skipAnotherActivity(LoginActivity.this,OrderActivity.class);
+                                   finish();
+                               }
+
+
                            }else{
                                Toast.makeText(LoginActivity.this,temp.message,Toast.LENGTH_SHORT).show();
                            }

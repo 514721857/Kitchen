@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 public class GirdDropDownAdapter extends BaseAdapter {
 
     private Context context;
-    private List<oneArea> list;
+    private List<String> list;
     private int checkItemPosition = 0;
 
     public void setCheckItem(int position) {
@@ -30,7 +30,7 @@ public class GirdDropDownAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public GirdDropDownAdapter(Context context, List<oneArea> list) {
+    public GirdDropDownAdapter(Context context, List<String> list) {
         this.context = context;
         this.list = list;
     }
@@ -65,7 +65,7 @@ public class GirdDropDownAdapter extends BaseAdapter {
     }
 
     private void fillValue(int position, ViewHolder viewHolder) {
-        viewHolder.mText.setText(list.get(position).getAddroneArea());
+        viewHolder.mText.setText(list.get(position));
         if (checkItemPosition != -1) {
             if (checkItemPosition == position) {
                 viewHolder.mText.setTextColor(context.getResources().getColor(R.color.drop_down_selected));

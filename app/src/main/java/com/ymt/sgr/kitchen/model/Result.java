@@ -6,9 +6,8 @@ package com.ymt.sgr.kitchen.model;
  */
 
 public class Result<T> {
+
     public static final int RESULT_OK = 200;
-
-
 
     public String message;
 

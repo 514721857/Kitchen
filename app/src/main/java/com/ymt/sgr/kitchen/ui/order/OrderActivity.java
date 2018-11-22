@@ -43,14 +43,12 @@ import com.ymt.sgr.kitchen.model.CommonModel;
 import com.ymt.sgr.kitchen.model.OrderBean;
 import com.ymt.sgr.kitchen.model.oneArea;
 import com.ymt.sgr.kitchen.ui.LoginActivity;
-import com.ymt.sgr.kitchen.ui.adapter.ConstellationAdapter;
-import com.ymt.sgr.kitchen.ui.adapter.GirdDropDownAdapter;
-import com.ymt.sgr.kitchen.ui.adapter.ListDropDownAdapter;
+
 import com.ymt.sgr.kitchen.ui.adapter.OrderListAdapter;
 import com.ymt.sgr.kitchen.util.OrderStatus;
 import com.ymt.sgr.kitchen.util.StartActivityUtil;
-import com.ymt.sgr.kitchen.view.MyDialog;
-import com.yyydjk.library.DropDownMenu;
+
+
 
 
 import net.posprinter.posprinterface.IMyBinder;
@@ -90,26 +88,20 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
     String address;
     private int status=2;
 
-    @BindView(R.id.dropDownMenu)
-    DropDownMenu mDropDownMenu;
+
 
     @BindView(R.id.top_view_left)
     TextView top_view_left;
 
 
-    private String headers[] = {"地址", "待配送"};
+    private String headers[] = {"外卖", "自取"};
     private List<View> popupViews = new ArrayList<>();
 
-    private GirdDropDownAdapter cityAdapter;
-    private ListDropDownAdapter ageAdapter;
-    private ListDropDownAdapter sexAdapter;
-    private ConstellationAdapter constellationAdapter;
 
-    List<oneArea> oneAreas;
-    private String citys[] = {"不限", "武汉", "北京", "上海", "成都", "广州", "深圳", "重庆", "天津", "西安", "南京", "杭州"};
+
+
 //    private String ages[] = {"不限", "18岁以下", "18-22岁", "23-26岁", "27-35岁", "35岁以上"};
     private String sexs[] = { "待配送", "已完成","已取消"};
-    private String constellations[] = {"不限", "白羊座", "金牛座", "双子座", "巨蟹座", "狮子座", "处女座", "天秤座", "天蝎座", "射手座", "摩羯座", "水瓶座", "双鱼座"};
 
     private int constellationPosition = 0;
     BluetoothAdapter blueadapter;//蓝牙适配器
@@ -385,76 +377,23 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
         Intent intent=new Intent(this,PosprinterService.class);
         bindService(intent, conn, BIND_AUTO_CREATE);
         top_view_left.setText(getString(R.string.unconnect));
-        getPresenter().getAddress1();
+//        getPresenter().getAddress1();
         //init city menu
 
     }
 
 
     private void initMenu(){
-        final ListView cityView = new ListView(this);
-        cityAdapter = new GirdDropDownAdapter(this, oneAreas);
-        cityView.setDividerHeight(0);
-        cityView.setAdapter(cityAdapter);
 
 
- /*       //init age menu
-        final ListView ageView = new ListView(this);
-        ageView.setDividerHeight(0);
-        ageAdapter = new ListDropDownAdapter(this, Arrays.asList(ages));
-        ageView.setAdapter(ageAdapter);*/
-
-        //init sex menu
-        final ListView sexView = new ListView(this);
-        sexView.setDividerHeight(0);
-        sexAdapter = new ListDropDownAdapter(this, Arrays.asList(sexs));
-        sexView.setAdapter(sexAdapter);
-
-/*        //init constellation
-        final View constellationView = getLayoutInflater().inflate(R.layout.custom_layout, null);
-        GridView constellation = ButterKnife.findById(constellationView, R.id.constellation);
-        constellationAdapter = new ConstellationAdapter(this, Arrays.asList(constellations));
-        constellation.setAdapter(constellationAdapter);
-        TextView ok = ButterKnife.findById(constellationView, R.id.ok);
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDropDownMenu.setTabText(constellationPosition == 0 ? headers[3] : constellations[constellationPosition]);
-                mDropDownMenu.closeMenu();
-            }
-        });*/
-
-        //init popupViews
-        popupViews.add(cityView);
-//        popupViews.add(ageView);
-        popupViews.add(sexView);
-
-/*
-        constellation.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                constellationAdapter.setCheckItem(position);
-                constellationPosition = position;
-            }
-        });*/
-
-/*        ageView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ageAdapter.setCheckItem(position);
-                mDropDownMenu.setTabText(position == 0 ? headers[1] : ages[position]);
-                mDropDownMenu.closeMenu();
-            }
-        });*/
-
-        //add item click event
+    /*    //add item click event
         cityView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 cityAdapter.setCheckItem(position);
-                mDropDownMenu.setTabText( oneAreas.get(position).getAddroneArea());
+                mDropDownMenu.setTabText( oneAreas.get(position));
                 mDropDownMenu.closeMenu();
-                address=oneAreas.get(position).getAddroneArea();
+                address=oneAreas.get(position);
                 refresh();
             }
         });
@@ -485,7 +424,7 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
         mRecyclerView=view.findViewById(R.id.rv_list);
         mSwipeRefreshLayout=view.findViewById(R.id.swipeLayout);
         //init dropdownview
-        mDropDownMenu.setDropDownMenu(Arrays.asList(headers), popupViews, view);
+
 
 
 
@@ -511,7 +450,7 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
         mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemChildClickListener(this);
-        refresh();
+        refresh();*/
     }
 
 
@@ -558,7 +497,7 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
 
     @Override
     public void ResultAddress1(List<oneArea> reslt) {
-        oneAreas=reslt;
+//        oneAreas=reslt;
         initMenu();
     }
 
@@ -755,8 +694,6 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mDropDownMenu.isShowing()) {
-            mDropDownMenu.closeMenu();
-        }
+
     }
 }

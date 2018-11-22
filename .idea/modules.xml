@@ -6,7 +6,6 @@
       <module fileurl="file://$PROJECT_DIR$/Kitchen.iml" filepath="$PROJECT_DIR$/Kitchen.iml" />
       <module fileurl="file://$PROJECT_DIR$/MvpFramework/MvpFramework.iml" filepath="$PROJECT_DIR$/MvpFramework/MvpFramework.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/dropMenu/dropMenu.iml" filepath="$PROJECT_DIR$/dropMenu/dropMenu.iml" />
     </modules>
   </component>
 </project>

@@ -1,1 +1,1 @@
-include ':app', ':MvpFramework',":dropMenu"
+include ':app', ':MvpFramework'
