@@ -34,13 +34,30 @@
                             android:layout_marginTop="10dp"
                             android:orientation="vertical">
 
-                                <TextView
-                                    android:id="@+id/order_list_name"
+                                <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="5dp"
-                                    android:text="姓名"
-                                    android:textColor="@android:color/black" />
+                                    android:orientation="horizontal">
+                                        <TextView
+                                            android:textSize="18dp"
+                                            android:id="@+id/order_list_num"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="5dp"
+                                            android:text="001"
+                                            android:textColor="@color/colorRed" />
+
+                                        <TextView
+                                            android:id="@+id/order_list_name"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="5dp"
+                                            android:text="姓名"
+                                            android:textColor="@android:color/black" />
+
+                                </LinearLayout>
+
+
 
                                 <TextView
                                     android:id="@+id/order_list_phone"
@@ -139,7 +156,16 @@
                             android:orientation="horizontal">
 
                                 <Button
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_weight="1.0"
+                                    android:id="@+id/order_btn_dy"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="30dp"
+                                    android:background="@drawable/touch_bg"
+                                    android:text="打印" />
 
+                                <Button
+                                    android:layout_marginLeft="10dp"
                                     android:layout_weight="1.0"
                                     android:id="@+id/order_btn_phone"
                                     android:layout_width="wrap_content"

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ymt.sgr.kitchen">
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
@@ -24,6 +25,8 @@
         </activity>
         <activity android:name=".ui.order.OrderActivity"></activity>
         <service android:name="net.posprinter.service.PosprinterService"></service>
+        <service android:name="com.zhangke.websocket.WebSocketService"/>
+        <receiver android:name="com.zhangke.websocket.NetworkChangedReceiver"/>
     </application>
 
 </manifest>

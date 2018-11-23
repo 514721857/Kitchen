@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
                                    editor.putString(AppCon.SCCESS_TOKEN_KEY,temp.content.getToken());
                                    editor.putString(AppCon.USER_NAME,login_ed_usename.getText().toString());
                                    editor.putString(AppCon.USER_PWD,login_ed_password.getText().toString());
-                                   editor.putString(AppCon.USER_SHOP_ID,temp.content.getShopId());
+                                   editor.putInt(AppCon.USER_SHOP_ID,Integer.parseInt(temp.content.getShopId()));
                                    editor.commit();
                                    StartActivityUtil.skipAnotherActivity(LoginActivity.this,OrderActivity.class);
                                    finish();

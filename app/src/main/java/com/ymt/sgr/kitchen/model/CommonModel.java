@@ -25,10 +25,12 @@ public class CommonModel extends BaseModel {
 
     String token;
     SharedPreferences pref ;
+    int shopId;;
     public CommonModel(Context context) {
         super(context);
         pref = context.getSharedPreferences(AppCon.USER_KEY,MODE_PRIVATE);
         token= pref.getString(AppCon.SCCESS_TOKEN_KEY,"");
+        shopId=pref.getInt(AppCon.USER_SHOP_ID,0);
     }
 
     /**
@@ -67,15 +69,12 @@ public class CommonModel extends BaseModel {
      *
      * @param onLceHttpResultListener
      */
-    public void getOrderList(int  status,int page,String address, final HttpUtils.OnHttpResultListener onLceHttpResultListener) {
+    public void getOrderList(int  status,int page, final HttpUtils.OnHttpResultListener onLceHttpResultListener) {
        RequestOrder order=new RequestOrder();
         order.setPageSize(10);
         order.setCurrPage(page);
         order.setStatus(status);
-        if(address!=null&&!order.equals("")){
-            order.setAddress(address);
-        }
-//        order.setStatus(status);
+        order.setShopId(shopId);
         Gson gson=new Gson();
         String obj=gson.toJson(order);
         System.out.println("请求参数"+obj);

@@ -40,6 +40,7 @@ import com.google.gson.Gson;
 import com.ymt.sgr.kitchen.R;
 import com.ymt.sgr.kitchen.config.AppCon;
 import com.ymt.sgr.kitchen.config.BaseMvpActivity;
+import com.ymt.sgr.kitchen.config.MvpWebSocketActivity;
 import com.ymt.sgr.kitchen.http.HttpUtils;
 import com.ymt.sgr.kitchen.model.CommonModel;
 import com.ymt.sgr.kitchen.model.OrderBean;
@@ -50,6 +51,8 @@ import com.ymt.sgr.kitchen.ui.adapter.OrderListAdapter;
 import com.ymt.sgr.kitchen.util.OrderStatus;
 import com.ymt.sgr.kitchen.util.StartActivityUtil;
 import com.ymt.sgr.kitchen.util.ToastUtils;
+import com.zhangke.websocket.ErrorResponse;
+import com.zhangke.websocket.Response;
 
 
 import net.posprinter.posprinterface.IMyBinder;
@@ -60,8 +63,10 @@ import net.posprinter.utils.DataForSendToPrinterTSC;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -72,12 +77,16 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import q.rorbin.badgeview.Badge;
+import q.rorbin.badgeview.QBadgeView;
 
-public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> implements OrderView ,OnItemChildClickListener{
+public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter> implements OrderView ,OnItemChildClickListener{
 
+    @BindView(R.id.rv_list)
     RecyclerView mRecyclerView;
 
 
+    @BindView(R.id.swipeLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
 
     private OrderListAdapter mAdapter;
@@ -87,7 +96,7 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
     SharedPreferences pref ;
     SharedPreferences.Editor editor;
     String address;
-    private int status=2;
+    private int status=1;//默认是待制作
 
 
 
@@ -131,6 +140,8 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
     View zq_bottom_view;
 
 
+    Badge zq_badge_text,wm_badeg_text;
+
     private  boolean isWm,isZq;
 
 
@@ -140,12 +151,16 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
 
             isWm=true;
             order_btn_wm.setTextColor(ContextCompat.getColor(this, R.color.colorRed));
+
+            order_btn_wm.setBackgroundResource(R.drawable.touch_bg_select);
             order_btn_zq.setTextColor(ContextCompat.getColor(this, R.color.bottom_text));
             wm_bottom_view.setVisibility(View.VISIBLE);
             zq_bottom_view.setVisibility(View.GONE);
             setWmChoice(0);
             setzQChoice(0);
 
+        zq_badge_text=new QBadgeView(this).bindTarget(zq_dzz).setBadgeText("").setBadgeGravity(Gravity.END | Gravity.TOP);
+        wm_badeg_text=new QBadgeView(this).bindTarget(order_text_dzz).setBadgeText("").setBadgeGravity(Gravity.END | Gravity.TOP);
 
   /*      if(isZq){
             order_btn_zq.setTextColor(ContextCompat.getColor(this, R.color.colorRed));
@@ -213,7 +228,9 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
             case R.id.order_btn_wm://外卖
               if(!isWm){
                   order_btn_wm.setTextColor(ContextCompat.getColor(this, R.color.colorRed));
+                  order_btn_wm.setBackgroundResource(R.drawable.touch_bg_select);
                   order_btn_zq .setTextColor(ContextCompat.getColor(this, R.color.bottom_text));
+                  order_btn_zq.setBackgroundResource(R.drawable.touch_bg);
                   wm_bottom_view.setVisibility(View.VISIBLE);
                   zq_bottom_view.setVisibility(View.GONE);
                   isZq=false;
@@ -223,7 +240,9 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
             case R.id.order_btn_zq://自取
                 if(!isZq){
                     order_btn_zq.setTextColor(ContextCompat.getColor(this, R.color.colorRed));
+                    order_btn_zq.setBackgroundResource(R.drawable.touch_bg_select);
                     order_btn_wm .setTextColor(ContextCompat.getColor(this, R.color.bottom_text));
+                    order_btn_wm.setBackgroundResource(R.drawable.touch_bg);
                     zq_bottom_view.setVisibility(View.VISIBLE);
                     wm_bottom_view .setVisibility(View.GONE);
                     isWm=false;
@@ -233,31 +252,57 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
                 break;
 
             case R.id.layout_zq_yqc://已取餐
+                status=4;
+                refresh();
                 setzQChoice(3);
                 break;
             case R.id.layout_zq_dqc://待取餐
+                status=3;
+                refresh();
                 setzQChoice(2);
                 break;
             case R.id.layout_zq_zzz://自取 制作中
+                status=2;
+                refresh();
                 setzQChoice(1);
                 break;
-
             case R.id.layout_zq_dzz:// 自取待制作
+                status=1;
+                refresh();
+                zq_badge_text.hide(true);
                 setzQChoice(0);
                 break;
-
             /////////////////////////////////////////////外卖
             case R.id.layout_dps:// 待配送
-
+                status=3;
+                refresh();
                 setWmChoice(2);
+
                 break;
             case R.id.layout_zzz:// 制作中
+                status=2;
+                refresh();
                 setWmChoice(1);
                 break;
             case R.id.layout_dzz:// 待制作
+                status=1;
+                refresh();
+                wm_badeg_text.hide(true);
                 setWmChoice(0);
-
                 break;
+            case R.id.top_view_right_text:
+                pref = this.getSharedPreferences(AppCon.USER_KEY,MODE_PRIVATE);
+                editor = pref.edit();
+                editor.putString(AppCon.SCCESS_TOKEN_KEY,"");
+                editor.commit();
+                StartActivityUtil.skipAnotherActivity(this, LoginActivity.class);
+                break;
+            case R.id.top_view_left://打印机
+                if (!isConnect) {//如果没有连接
+                    setbluetooth();//蓝牙连接
+                }
+                break;
+
      /*       case R.id.result:
 
 
@@ -526,6 +571,7 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
         bindService(intent, conn, BIND_AUTO_CREATE);
         top_view_left.setText(getString(R.string.unconnect));
         setMoren();
+        initMenu();
 //        getPresenter().getAddress1();
         //init city menu
 
@@ -533,53 +579,6 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
 
 
     private void initMenu(){
-
-
-    /*    //add item click event
-        cityView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                cityAdapter.setCheckItem(position);
-                mDropDownMenu.setTabText( oneAreas.get(position));
-                mDropDownMenu.closeMenu();
-                address=oneAreas.get(position);
-                refresh();
-            }
-        });
-
-        sexView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                sexAdapter.setCheckItem(position);
-                mDropDownMenu.setTabText( sexs[position]);
-                mDropDownMenu.closeMenu();
-                if(position==0){
-                    status=2;//待配送
-                }else if(position==1){
-                    status=4;//完成配送
-                }else if(position==2){
-                    status=-1;
-                }else{
-
-                }
-                refresh();
-            }
-        });
-
-
-        //init context view
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View view = inflater.inflate(R.layout.layout_list, null);
-        mRecyclerView=view.findViewById(R.id.rv_list);
-        mSwipeRefreshLayout=view.findViewById(R.id.swipeLayout);
-        //init dropdownview
-
-
-
-
-
-
-
         mSwipeRefreshLayout.setRefreshing(false);
         mSwipeRefreshLayout.setColorSchemeColors(Color.rgb(47, 223, 189));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -599,18 +598,18 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
         mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemChildClickListener(this);
-        refresh();*/
+        refresh();
     }
 
 
     private void loadMore() {
-        getPresenter().getOrderList(status,mNextRequestPage,address);
+        getPresenter().getOrderList(status,mNextRequestPage);
     }
 
     private void refresh() {
         mNextRequestPage = 0;
         mAdapter.setEnableLoadMore(false);//这里的作用是防止下拉刷新的时候还可以上拉加载
-       getPresenter().getOrderList(status,mNextRequestPage,address);
+       getPresenter().getOrderList(status,mNextRequestPage);
     }
 
 
@@ -674,6 +673,33 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
     public void onItemChildClick(final BaseQuickAdapter adapter, View view,final int position) {
         switch (view.getId()) {
 
+
+            case R.id.order_list_zt://修改订单状态
+                OrderBean updateOrder=  (OrderBean) adapter.getData().get(position);
+                if(updateOrder.getStatus()==1){//需要设置时间//按下开始制作
+                    Date now = new Date();
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//可以方便地修改日期格式
+                    String time = dateFormat.format(now);
+                    updateOrder.setCfStartTime(time);
+                    updateOrder.setStatus(2);
+                }else if(updateOrder.getStatus()==2){//按下完成制作
+                    Date now = new Date();
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//可以方便地修改日期格式
+                    String time = dateFormat.format(now);
+                    updateOrder.setCfEndTime(time);
+                    try {
+                        updateOrder.setCfTimeLen(OrderStatus.timeSubtraction(updateOrder.getCfStartTime(),time));//分钟
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    updateOrder.setStatus(3);
+                }else if(updateOrder.getStatus()==3){
+                    updateOrder.setStatus(4);
+                }
+                getPresenter().UpdateOrder(updateOrder,position);
+
+                break;
+
             case R.id.order_btn_phone://打电话
                 OrderBean temp=  (OrderBean) adapter.getData().get(position);
                 Intent intent = new Intent(Intent.ACTION_CALL);
@@ -681,29 +707,19 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
                 intent.setData(data);
                 OrderActivity.this.startActivity(intent);
                 break;
-            case R.id.order_list_zt://打印
+            case R.id.order_btn_dy://打印
                 OrderBean temp1=  (OrderBean) adapter.getData().get(position);
-         /*       try {
-                    PrintContent(temp1);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }*/
 
                 if (isConnect) {
 
                     try {
-
-//                        DataForSendToPrinterTSC.p
-
                         binder.write(PrintContent(temp1), new UiExecute() {//打印
-
                             @Override
                             public void onsucess() {
                                 // TODO Auto-generated method stub
                                 Toast.makeText(getApplicationContext(), getString(R.string.send_success), Toast.LENGTH_SHORT)
                                         .show();
                             }
-
                             @Override
                             public void onfailed() {
                                 // TODO Auto-generated method stub
@@ -844,5 +860,16 @@ public class OrderActivity extends BaseMvpActivity<OrderView,OrderPresenter> imp
     protected void onDestroy() {
         super.onDestroy();
 
+    }
+
+    @Override
+    public void onMessageResponse(Response message) {
+        System.out.println("新消息提示"+message.getResponseText());
+
+    }
+
+    @Override
+    public void onSendMessageError(ErrorResponse error) {
+        System.out.println("新消息错误"+error.getResponseText());
     }
 }

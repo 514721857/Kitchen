@@ -59,22 +59,6 @@ public abstract class BaseMvpActivity<V extends MvpView, P extends MvpPresenter<
     }
     protected abstract int setLayoutId();
 
-    protected void initImmersionBar() {
-        //在BaseActivity里初始化  因为界面需要，状态栏的背景都需要是以图片为背景，所以这里需要在每个Activity里的xml布局文件中加入  topview布局
-        //        https://github.com/gyf-dev/ImmersionBar  最外面布局为realayout 可能会导致挡住标题栏
-
-        /*
-         .titleBar(view)    //解决状态栏和布局重叠问题，任选其一
-             .titleBarMarginTop(view)     //解决状态栏和布局重叠问题，任选其一
-             .statusBarView(view)  //解决状态栏和布局重叠问题，任选其一
-        */
-//         */
-
-
-
-       /* mImmersionBar = ImmersionBar.with(this).fitsSystemWindows(true) .statusBarDarkFont(true, 0.2f)  ;
-        mImmersionBar.init();*/
-    }
 
     protected void initData() {
     }
@@ -82,14 +66,5 @@ public abstract class BaseMvpActivity<V extends MvpView, P extends MvpPresenter<
     protected void initView() {
     }
 
-    /**
-     * 是否可以使用沉浸式
-     * Is immersion bar enabled boolean.
-     *
-     * @return the boolean
-     */
-    protected boolean isImmersionBarEnabled() {
-        return true;
-    }
 
 }
