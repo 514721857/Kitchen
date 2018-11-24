@@ -226,6 +226,7 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.order_btn_wm://外卖
+                this.sendText("测试");
               if(!isWm){
                   order_btn_wm.setTextColor(ContextCompat.getColor(this, R.color.colorRed));
                   order_btn_wm.setBackgroundResource(R.drawable.touch_bg_select);
@@ -677,13 +678,13 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
             case R.id.order_list_zt://修改订单状态
                 OrderBean updateOrder=  (OrderBean) adapter.getData().get(position);
                 if(updateOrder.getStatus()==1){//需要设置时间//按下开始制作
-                    Date now = new Date();
+               /*     Date now = new Date();
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//可以方便地修改日期格式
                     String time = dateFormat.format(now);
-                    updateOrder.setCfStartTime(time);
+                    updateOrder.setCfStartTime(time);*/
                     updateOrder.setStatus(2);
                 }else if(updateOrder.getStatus()==2){//按下完成制作
-                    Date now = new Date();
+                  /*  Date now = new Date();
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//可以方便地修改日期格式
                     String time = dateFormat.format(now);
                     updateOrder.setCfEndTime(time);
@@ -691,10 +692,10 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
                         updateOrder.setCfTimeLen(OrderStatus.timeSubtraction(updateOrder.getCfStartTime(),time));//分钟
                     } catch (ParseException e) {
                         e.printStackTrace();
-                    }
+                    }*/
                     updateOrder.setStatus(3);
                 }else if(updateOrder.getStatus()==3){
-                    updateOrder.setStatus(4);
+                   return;
                 }
                 getPresenter().UpdateOrder(updateOrder,position);
 
