@@ -63,9 +63,6 @@ public class LoginActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.login_bt_commit://登录
 
-                StartActivityUtil.skipAnotherActivity(LoginActivity.this,OrderActivity.class);
-                finish();
-
                 if(login_ed_usename.getText().toString().equals("")){
                     Toast.makeText(LoginActivity.this,"请输入用户名",Toast.LENGTH_SHORT).show();
                 }else if(login_ed_password.getText().toString().equals("")){
@@ -78,8 +75,8 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onResult(Object result) {
                            Result<User> temp=(Result<User>)result;
+                            System.out.println("登录放回");
                            if(temp.status.equals("200")){
-
                                if(!temp.content.getEnabled().equals("1")){
                                    ToastUtils.showLong("该账户已被停用");
                                }else if(!temp.content.getRole().equals("1")){

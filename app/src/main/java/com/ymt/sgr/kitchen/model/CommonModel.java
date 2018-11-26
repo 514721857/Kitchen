@@ -38,12 +38,16 @@ public class CommonModel extends BaseModel {
      *
      * @param onLceHttpResultListener
      */
-    public void getSave(final HttpUtils.OnHttpResultListener onLceHttpResultListener) {
+    public void getSave(int  status,int page, final HttpUtils.OnHttpResultListener onLceHttpResultListener){
 
         RequestOrder order=new RequestOrder();
-        order.setStatus(1);
+        order.setPageSize(10);
+        order.setCurrPage(page);
+        order.setStatus(status);
+        order.setShopId(shopId);
         Gson gson=new Gson();
         String obj=gson.toJson(order);
+        System.out.println("请求参数"+obj);
         RequestBody body= RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),obj);
         HttpService essenceService= buildService(HttpService.class);
         buildObserve((Observable)essenceService.getSave(token,body),onLceHttpResultListener);
@@ -58,6 +62,7 @@ public class CommonModel extends BaseModel {
     public void getLogin(User info, final HttpUtils.OnHttpResultListener onLceHttpResultListener) {
         Gson gson=new Gson();
         String obj=gson.toJson(info);
+        System.out.println("登录"+obj);
         RequestBody body= RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),obj);
         HttpService essenceService= buildService(HttpService.class);
         buildObserve((Observable)essenceService.getLogin(body),onLceHttpResultListener);

@@ -71,8 +71,10 @@ public class BaseModel implements MvpModel {
 
                     @Override
                     public void onNext(Object model) {
-//                        Result result=(Result) model;  只有登录的时候不存在转化
-//                        if(result.)     这里可以统一处理状态码，可以统一跳转到 登录界面（如果token过期了）
+                       /* Result result=(Result) model; // 只有登录的时候不存在转化
+                        System.out.println("status"+result.status+"message"+result.message);*/
+//                        if(result.)     这里可以统一处理状态码，可m以统一跳转到 登录界面（如果token过期了）
+
                         onLceHttpResultListener.onResult(model);
                     }});
 

@@ -8,6 +8,13 @@ package com.ymt.sgr.kitchen.model;
 
 public class OrderBean {
 
+
+
+
+
+
+
+
     String buyerId;//买家主键，作关联
     String buyerOpenid;//来自微信
     int kfId;//客服id
@@ -16,13 +23,13 @@ public class OrderBean {
     int cfId;//厨房id
     int todaySeq;//当天序号，表示今天的第几单
     int psId;//配送员id
-    String psStartTime;//配送开始时间
-    String psEndTime;//：配送结束时间
+  /*  String psStartTime;//配送开始时间
+    String psEndTime;//：配送结束时间*/
     String psTimeLen;//配送=结束时间-开始时间，分钟
 
     String cfTimeLen;//：厨房订单完成时长，单位：分钟
-    String cfEndTime;//：厨房完成制作的结束时间
-    String cfStartTime;//：厨房开始制作的开始时间
+/*    String cfEndTime;//：厨房完成制作的结束时间
+    String cfStartTime;//：厨房开始制作的开始时间*/
 
     String orderId;//主键
     String username;//买家
@@ -44,6 +51,22 @@ public class OrderBean {
     String phone;//联系方式
     String gmtCreate;//下单时间
     String sendTime;//配送时间，默认为当前立即配送
+
+    public String getBuyerId() {
+        return buyerId;
+    }
+
+    public void setBuyerId(String buyerId) {
+        this.buyerId = buyerId;
+    }
+
+    public String getBuyerOpenid() {
+        return buyerOpenid;
+    }
+
+    public void setBuyerOpenid(String buyerOpenid) {
+        this.buyerOpenid = buyerOpenid;
+    }
 
     public int getKfId() {
         return kfId;
@@ -92,7 +115,7 @@ public class OrderBean {
     public void setPsId(int psId) {
         this.psId = psId;
     }
-
+/*
     public String getPsStartTime() {
         return psStartTime;
     }
@@ -107,7 +130,7 @@ public class OrderBean {
 
     public void setPsEndTime(String psEndTime) {
         this.psEndTime = psEndTime;
-    }
+    }*/
 
     public String getPsTimeLen() {
         return psTimeLen;
@@ -125,7 +148,7 @@ public class OrderBean {
         this.cfTimeLen = cfTimeLen;
     }
 
-    public String getCfEndTime() {
+/*    public String getCfEndTime() {
         return cfEndTime;
     }
 
@@ -139,7 +162,7 @@ public class OrderBean {
 
     public void setCfStartTime(String cfStartTime) {
         this.cfStartTime = cfStartTime;
-    }
+    }*/
 
     public String getOrderId() {
         return orderId;

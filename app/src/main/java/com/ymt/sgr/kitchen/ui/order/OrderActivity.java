@@ -652,6 +652,12 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
 
     @Override
     public void showResult(List<OrderBean> result) {
+        if(result!=null){
+            System.out.println("显示数据"+result.size());
+        }else{
+            System.out.println("没有数据");
+        }
+
         if(mNextRequestPage==0){
             setData(true,result);
             mAdapter.setEnableLoadMore(true);

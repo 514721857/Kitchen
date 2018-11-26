@@ -3,8 +3,10 @@ package com.ymt.sgr.kitchen.http;
 
 
 
+import com.ymt.sgr.kitchen.model.OrderBean;
 import com.ymt.sgr.kitchen.model.OrderRespons;
 import com.ymt.sgr.kitchen.model.Result;
+import com.ymt.sgr.kitchen.model.User;
 import com.ymt.sgr.kitchen.model.oneArea;
 
 import java.util.List;
@@ -41,7 +43,7 @@ public interface HttpService {
      */
     @Headers({"Content-type:application/json;charset=UTF-8"})
     @POST("seller/login")
-    Observable<Result<String>> getLogin(@Body RequestBody info);
+    Observable<Result<User>> getLogin(@Body RequestBody info);
 
 
     /**
@@ -51,7 +53,7 @@ public interface HttpService {
      * @return
      */
     @Headers({"Content-type:application/json;charset=UTF-8"})
-    @POST("seller/order/list")
+    @POST("seller/order/page")
     Observable<ResponseBody> getSave(@Header("token") String token, @Body RequestBody info);
 
 

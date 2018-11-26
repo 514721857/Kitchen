@@ -11,7 +11,11 @@ import com.ymt.sgr.kitchen.model.OrderRespons;
 import com.ymt.sgr.kitchen.model.Result;
 import com.ymt.sgr.kitchen.model.oneArea;
 
+import java.io.IOException;
 import java.util.List;
+
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 
 /**
@@ -29,12 +33,37 @@ public class OrderPresenter extends BasePresenter<OrderView> {
         this.commonModel = new CommonModel(context);
     }
     public void getOrderList(int status,int page){
-        commonModel.getOrderList(status, page, new HttpUtils.OnHttpResultListener() {
+
+/*       commonModel.getSave(status, page, new HttpUtils.OnHttpResultListener() {
             @Override
             public void onResult(Object result) {
-               Result<OrderRespons> temp=(Result<OrderRespons>)result;
+                ResponseBody temp=(ResponseBody)result;
+                try {
+
+                   System.out.println("订单列表"+temp.string()) ;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+        });*/
+
+       commonModel.getOrderList(status, page, new HttpUtils.OnHttpResultListener() {
+            @Override
+            public void onResult(Object result) {
+                Result<OrderRespons> temp=(Result<OrderRespons>)result;
+                System.out.println("显示条数"+temp.content.getTotalElements());
                 if(temp.status.equals("200")){
-                   getView().showResult(temp.content.getData());
+                    getView().showResult(temp.content.getData());
                 }else{
                     getView().showResultOnErr(temp.message);
 
