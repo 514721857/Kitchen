@@ -95,9 +95,13 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
     private static final int PAGE_SIZE = 10;
     SharedPreferences pref ;
     SharedPreferences.Editor editor;
+
     String address;
     private int status=1;//默认是待制作
-
+    private int lastWm=1;
+    private int lastZq=1;
+    private int type=1;//默认是外卖
+    private String userID;
 
 
     @BindView(R.id.order_text_dzz)
@@ -217,6 +221,8 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
         }
     };
     boolean isConnect;//用来标识连接状态的一个boolean值
+
+
     @Override
     protected int setLayoutId() {
         return R.layout.activity_main;
@@ -226,8 +232,10 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.order_btn_wm://外卖
-                this.sendText("测试");
+                type=1;
+//                this.sendText("测试");
               if(!isWm){
+
                   order_btn_wm.setTextColor(ContextCompat.getColor(this, R.color.colorRed));
                   order_btn_wm.setBackgroundResource(R.drawable.touch_bg_select);
                   order_btn_zq .setTextColor(ContextCompat.getColor(this, R.color.bottom_text));
@@ -235,11 +243,15 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
                   wm_bottom_view.setVisibility(View.VISIBLE);
                   zq_bottom_view.setVisibility(View.GONE);
                   isZq=false;
+                  status=lastWm;
+                  refresh();
 
               }
                 break;
             case R.id.order_btn_zq://自取
+                type=0;
                 if(!isZq){
+
                     order_btn_zq.setTextColor(ContextCompat.getColor(this, R.color.colorRed));
                     order_btn_zq.setBackgroundResource(R.drawable.touch_bg_select);
                     order_btn_wm .setTextColor(ContextCompat.getColor(this, R.color.bottom_text));
@@ -248,51 +260,55 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
                     wm_bottom_view .setVisibility(View.GONE);
                     isWm=false;
 
+                        status=lastZq;
+
+                    refresh();
+
                 }
 //                setzQChoice(3);
                 break;
 
             case R.id.layout_zq_yqc://已取餐
-                status=4;
+              status=lastZq=4;
                 refresh();
                 setzQChoice(3);
                 break;
             case R.id.layout_zq_dqc://待取餐
-                status=3;
+                status=lastZq=3;
                 refresh();
                 setzQChoice(2);
                 break;
             case R.id.layout_zq_zzz://自取 制作中
-                status=2;
+                status= lastZq=2;
                 refresh();
                 setzQChoice(1);
                 break;
             case R.id.layout_zq_dzz:// 自取待制作
-                status=1;
+                status= lastZq=1;
                 refresh();
                 zq_badge_text.hide(true);
                 setzQChoice(0);
                 break;
             /////////////////////////////////////////////外卖
             case R.id.layout_dps:// 待配送
-                status=3;
+                status=lastWm=3;
                 refresh();
                 setWmChoice(2);
 
                 break;
             case R.id.layout_zzz:// 制作中
-                status=2;
+                status=lastWm=2;
                 refresh();
                 setWmChoice(1);
                 break;
             case R.id.layout_dzz:// 待制作
-                status=1;
+                status= lastWm=1;
                 refresh();
                 wm_badeg_text.hide(true);
                 setWmChoice(0);
                 break;
             case R.id.top_view_right_text:
-                pref = this.getSharedPreferences(AppCon.USER_KEY,MODE_PRIVATE);
+
                 editor = pref.edit();
                 editor.putString(AppCon.SCCESS_TOKEN_KEY,"");
                 editor.commit();
@@ -332,13 +348,7 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
                     }
                 });
                 break;
-                case R.id.top_view_right_text:
-                    pref = this.getSharedPreferences(AppCon.USER_KEY,MODE_PRIVATE);
-                    editor = pref.edit();
-                    editor.putString(AppCon.SCCESS_TOKEN_KEY,"");
-                    editor.commit();
-                    StartActivityUtil.skipAnotherActivity(this, LoginActivity.class);
-                    break;
+
             case R.id.top_view_left://打印机
                 if (!isConnect) {//如果没有连接
                     setbluetooth();//蓝牙连接
@@ -568,6 +578,9 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
     protected void initView() {
         super.initView();
         //绑定service，获取ImyBinder对象
+
+        pref = this.getSharedPreferences(AppCon.USER_KEY,MODE_PRIVATE);
+        userID= pref.getString(AppCon.USER_USER_ID,"");
         Intent intent=new Intent(this,PosprinterService.class);
         bindService(intent, conn, BIND_AUTO_CREATE);
         top_view_left.setText(getString(R.string.unconnect));
@@ -577,7 +590,6 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
         //init city menu
 
     }
-
 
     private void initMenu(){
         mSwipeRefreshLayout.setRefreshing(false);
@@ -604,13 +616,13 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
 
 
     private void loadMore() {
-        getPresenter().getOrderList(status,mNextRequestPage);
+        getPresenter().getOrderList(status,mNextRequestPage,type);
     }
 
     private void refresh() {
         mNextRequestPage = 0;
         mAdapter.setEnableLoadMore(false);//这里的作用是防止下拉刷新的时候还可以上拉加载
-       getPresenter().getOrderList(status,mNextRequestPage);
+       getPresenter().getOrderList(status,mNextRequestPage,type);
     }
 
 
@@ -688,6 +700,7 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//可以方便地修改日期格式
                     String time = dateFormat.format(now);
                     updateOrder.setCfStartTime(time);*/
+                    updateOrder.setCfId(userID);
                     updateOrder.setStatus(2);
                 }else if(updateOrder.getStatus()==2){//按下完成制作
                   /*  Date now = new Date();
@@ -871,6 +884,7 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
 
     @Override
     public void onMessageResponse(Response message) {
+        ToastUtils.showLong("新订单提醒");
         System.out.println("新消息提示"+message.getResponseText());
 
     }

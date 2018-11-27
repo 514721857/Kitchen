@@ -12,12 +12,21 @@ public class User {
     String enabled;
     String role;
     String token;
+    String sellerId;
   /*  role: 0分店管理员，1厨房，2快递，99总管理账号，98客服
 username：账号
 phone：电话号码
 shopId：店铺id
 enabled：1可用；0停用
     }*/
+
+    public String getSellerId() {
+        return sellerId;
+    }
+
+    public void setSellerId(String sellerId) {
+        this.sellerId = sellerId;
+    }
 
     public String getToken() {
         return token;

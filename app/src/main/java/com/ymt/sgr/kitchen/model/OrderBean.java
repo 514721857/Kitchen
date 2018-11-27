@@ -17,19 +17,19 @@ public class OrderBean {
 
     String buyerId;//买家主键，作关联
     String buyerOpenid;//来自微信
-    int kfId;//客服id
-    int shopId;//店铺id
+    String kfId;//客服id
+    String shopId;//店铺id
     int type;//0到店自取，1表示外卖送
-    int cfId;//厨房id
+    String cfId;//厨房id
     int todaySeq;//当天序号，表示今天的第几单
-    int psId;//配送员id
-  /*  String psStartTime;//配送开始时间
-    String psEndTime;//：配送结束时间*/
+    String psId;//配送员id
+    String psStartTime;//配送开始时间
+    String psEndTime;//：配送结束时间
     String psTimeLen;//配送=结束时间-开始时间，分钟
 
     String cfTimeLen;//：厨房订单完成时长，单位：分钟
-/*    String cfEndTime;//：厨房完成制作的结束时间
-    String cfStartTime;//：厨房开始制作的开始时间*/
+    String cfEndTime;//：厨房完成制作的结束时间
+    String cfStartTime;//：厨房开始制作的开始时间
 
     String orderId;//主键
     String username;//买家
@@ -68,37 +68,7 @@ public class OrderBean {
         this.buyerOpenid = buyerOpenid;
     }
 
-    public int getKfId() {
-        return kfId;
-    }
 
-    public void setKfId(int kfId) {
-        this.kfId = kfId;
-    }
-
-    public int getShopId() {
-        return shopId;
-    }
-
-    public void setShopId(int shopId) {
-        this.shopId = shopId;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public int getCfId() {
-        return cfId;
-    }
-
-    public void setCfId(int cfId) {
-        this.cfId = cfId;
-    }
 
     public int getTodaySeq() {
         return todaySeq;
@@ -108,14 +78,7 @@ public class OrderBean {
         this.todaySeq = todaySeq;
     }
 
-    public int getPsId() {
-        return psId;
-    }
 
-    public void setPsId(int psId) {
-        this.psId = psId;
-    }
-/*
     public String getPsStartTime() {
         return psStartTime;
     }
@@ -130,7 +93,7 @@ public class OrderBean {
 
     public void setPsEndTime(String psEndTime) {
         this.psEndTime = psEndTime;
-    }*/
+    }
 
     public String getPsTimeLen() {
         return psTimeLen;
@@ -148,7 +111,7 @@ public class OrderBean {
         this.cfTimeLen = cfTimeLen;
     }
 
-/*    public String getCfEndTime() {
+  public String getCfEndTime() {
         return cfEndTime;
     }
 
@@ -162,7 +125,7 @@ public class OrderBean {
 
     public void setCfStartTime(String cfStartTime) {
         this.cfStartTime = cfStartTime;
-    }*/
+    }
 
     public String getOrderId() {
         return orderId;
@@ -274,5 +237,45 @@ public class OrderBean {
 
     public void setSn(String sn) {
         this.sn = sn;
+    }
+
+    public String getKfId() {
+        return kfId;
+    }
+
+    public void setKfId(String kfId) {
+        this.kfId = kfId;
+    }
+
+    public String getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(String shopId) {
+        this.shopId = shopId;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String getCfId() {
+        return cfId;
+    }
+
+    public void setCfId(String cfId) {
+        this.cfId = cfId;
+    }
+
+    public String getPsId() {
+        return psId;
+    }
+
+    public void setPsId(String psId) {
+        this.psId = psId;
     }
 }

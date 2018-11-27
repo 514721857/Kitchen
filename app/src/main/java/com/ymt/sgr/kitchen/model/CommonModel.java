@@ -74,11 +74,12 @@ public class CommonModel extends BaseModel {
      *
      * @param onLceHttpResultListener
      */
-    public void getOrderList(int  status,int page, final HttpUtils.OnHttpResultListener onLceHttpResultListener) {
+    public void getOrderList(int  status,int page,int type, final HttpUtils.OnHttpResultListener onLceHttpResultListener) {
        RequestOrder order=new RequestOrder();
         order.setPageSize(10);
         order.setCurrPage(page);
         order.setStatus(status);
+        order.setType(type);
         order.setShopId(shopId);
         Gson gson=new Gson();
         String obj=gson.toJson(order);

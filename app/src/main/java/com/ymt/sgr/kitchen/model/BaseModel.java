@@ -56,23 +56,27 @@ public class BaseModel implements MvpModel {
 
                     @Override
                     public void onError(Throwable e) {
+                        System.out.println("onError"+new Exception(e));
                         onLceHttpResultListener.onError(new Exception(e));
                     }
 
                     @Override
                     public void onComplete() {
+                        System.out.println("status");
                         onLceHttpResultListener.onCompleted();
                     }
 
                     @Override
                     public void onSubscribe(Disposable d) {
+                        System.out.println("onSubscribe");
 
                     }
 
                     @Override
                     public void onNext(Object model) {
-                       /* Result result=(Result) model; // 只有登录的时候不存在转化
-                        System.out.println("status"+result.status+"message"+result.message);*/
+                        System.out.println("onNext");
+                        Result result=(Result) model; // 只有登录的时候不存在转化
+                        System.out.println("status"+result.status+"message"+result.message);
 //                        if(result.)     这里可以统一处理状态码，可m以统一跳转到 登录界面（如果token过期了）
 
                         onLceHttpResultListener.onResult(model);

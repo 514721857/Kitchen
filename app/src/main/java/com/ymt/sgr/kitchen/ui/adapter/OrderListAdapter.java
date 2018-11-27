@@ -37,7 +37,7 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderBean,BaseViewHolder>
     @Override
     protected void convert(BaseViewHolder baseViewHolder, OrderBean personItem) {
 
-        baseViewHolder.setText(R.id.order_list_num,personItem.getTodaySeq());
+        baseViewHolder.setText(R.id.order_list_num,personItem.getTodaySeq()+" ");
         baseViewHolder.setText(R.id.order_list_name,personItem.getUsername());
         baseViewHolder.setText(R.id.order_list_phone,personItem.getPhone());
         baseViewHolder.setText(R.id.order_list_address,personItem.getAddress());

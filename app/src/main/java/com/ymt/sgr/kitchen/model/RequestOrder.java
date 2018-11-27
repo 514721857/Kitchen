@@ -11,6 +11,16 @@ public class RequestOrder {
     int pageSize;
     String address;
     int shopId;
+    int type;
+
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
 
     public int getShopId() {
         return shopId;

@@ -32,7 +32,7 @@ public class OrderPresenter extends BasePresenter<OrderView> {
         this.contexts=context;
         this.commonModel = new CommonModel(context);
     }
-    public void getOrderList(int status,int page){
+    public void getOrderList(int status,int page,int type){
 
 /*       commonModel.getSave(status, page, new HttpUtils.OnHttpResultListener() {
             @Override
@@ -57,7 +57,7 @@ public class OrderPresenter extends BasePresenter<OrderView> {
             }
         });*/
 
-       commonModel.getOrderList(status, page, new HttpUtils.OnHttpResultListener() {
+       commonModel.getOrderList(status, page,type, new HttpUtils.OnHttpResultListener() {
             @Override
             public void onResult(Object result) {
                 Result<OrderRespons> temp=(Result<OrderRespons>)result;
