@@ -24,6 +24,7 @@ public abstract class AbsWebSocketActivity extends AppCompatActivity implements 
 
     @Override
     public void sendText(String text) {
+        System.out.println("webcocket+sendText"+text);
         mConnectManager.sendText(text);
     }
 
@@ -37,7 +38,7 @@ public abstract class AbsWebSocketActivity extends AppCompatActivity implements 
      */
     @Override
     public void onServiceBindSuccess() {
-
+        System.out.println("webcocket+onServiceBindSuccess");
     }
 
     /**
@@ -45,6 +46,7 @@ public abstract class AbsWebSocketActivity extends AppCompatActivity implements 
      */
     @Override
     public void onConnected() {
+        System.out.println("webcocket+onConnected");
 
     }
 
@@ -55,7 +57,7 @@ public abstract class AbsWebSocketActivity extends AppCompatActivity implements 
      */
     @Override
     public void onConnectError(Throwable cause) {
-
+        System.out.println("webcocket+onConnected");
     }
 
     /**
@@ -63,7 +65,7 @@ public abstract class AbsWebSocketActivity extends AppCompatActivity implements 
      */
     @Override
     public void onDisconnected() {
-
+        System.out.println("webcocket+onConnected");
     }
 
     @Override

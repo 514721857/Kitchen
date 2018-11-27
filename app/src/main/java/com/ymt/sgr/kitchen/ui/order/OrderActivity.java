@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.IBinder;
 import android.support.v4.content.ContextCompat;
@@ -43,12 +44,15 @@ import com.ymt.sgr.kitchen.config.BaseMvpActivity;
 import com.ymt.sgr.kitchen.config.MvpWebSocketActivity;
 import com.ymt.sgr.kitchen.http.HttpUtils;
 import com.ymt.sgr.kitchen.model.CommonModel;
+import com.ymt.sgr.kitchen.model.GsonTip;
 import com.ymt.sgr.kitchen.model.OrderBean;
+import com.ymt.sgr.kitchen.model.clientMsg;
 import com.ymt.sgr.kitchen.model.oneArea;
 import com.ymt.sgr.kitchen.ui.LoginActivity;
 
 import com.ymt.sgr.kitchen.ui.adapter.OrderListAdapter;
 import com.ymt.sgr.kitchen.util.OrderStatus;
+import com.ymt.sgr.kitchen.util.SoundPoolPlayer;
 import com.ymt.sgr.kitchen.util.StartActivityUtil;
 import com.ymt.sgr.kitchen.util.ToastUtils;
 import com.zhangke.websocket.ErrorResponse;
@@ -102,6 +106,7 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
     private int lastZq=1;
     private int type=1;//默认是外卖
     private String userID;
+    int shopId;;
 
 
     @BindView(R.id.order_text_dzz)
@@ -144,9 +149,13 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
     View zq_bottom_view;
 
 
-    Badge zq_badge_text,wm_badeg_text;
+
+    Badge wm_badeg_but,zq_badeg_but;
 
     private  boolean isWm,isZq;
+
+    private Gson gson;
+    SoundPoolPlayer mPlayer;
 
 
     //设置默认
@@ -163,8 +172,8 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
             setWmChoice(0);
             setzQChoice(0);
 
-        zq_badge_text=new QBadgeView(this).bindTarget(zq_dzz).setBadgeText("").setBadgeGravity(Gravity.END | Gravity.TOP);
-        wm_badeg_text=new QBadgeView(this).bindTarget(order_text_dzz).setBadgeText("").setBadgeGravity(Gravity.END | Gravity.TOP);
+        zq_badeg_but=new QBadgeView(this).bindTarget(order_btn_zq).setBadgeGravity(Gravity.END | Gravity.TOP);
+        wm_badeg_but=new QBadgeView(this).bindTarget(order_btn_wm).setBadgeGravity(Gravity.END | Gravity.TOP);
 
   /*      if(isZq){
             order_btn_zq.setTextColor(ContextCompat.getColor(this, R.color.colorRed));
@@ -286,7 +295,6 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
             case R.id.layout_zq_dzz:// 自取待制作
                 status= lastZq=1;
                 refresh();
-                zq_badge_text.hide(true);
                 setzQChoice(0);
                 break;
             /////////////////////////////////////////////外卖
@@ -304,7 +312,7 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
             case R.id.layout_dzz:// 待制作
                 status= lastWm=1;
                 refresh();
-                wm_badeg_text.hide(true);
+
                 setWmChoice(0);
                 break;
             case R.id.top_view_right_text:
@@ -577,11 +585,22 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
     @Override
     protected void initView() {
         super.initView();
-        //绑定service，获取ImyBinder对象
+
+        mPlayer = SoundPoolPlayer.create(this, R.raw.newtip);
+        mPlayer.setOnCompletionListener(
+                new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) { 	//mp will be null here
+                        Log.d("debug", "completed");
+                    }
+                }
+        );
 
         pref = this.getSharedPreferences(AppCon.USER_KEY,MODE_PRIVATE);
         userID= pref.getString(AppCon.USER_USER_ID,"");
+        shopId=pref.getInt(AppCon.USER_SHOP_ID,0);
         Intent intent=new Intent(this,PosprinterService.class);
+        //绑定service，获取ImyBinder对象
         bindService(intent, conn, BIND_AUTO_CREATE);
         top_view_left.setText(getString(R.string.unconnect));
         setMoren();
@@ -620,6 +639,13 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
     }
 
     private void refresh() {
+        if(type==0&&status==1){//自取的提醒点要取消
+            zq_badeg_but.hide(true);
+        }
+        if(type==1&&status==1){
+            wm_badeg_but.hide(true);
+        }
+
         mNextRequestPage = 0;
         mAdapter.setEnableLoadMore(false);//这里的作用是防止下拉刷新的时候还可以上拉加载
        getPresenter().getOrderList(status,mNextRequestPage,type);
@@ -702,6 +728,7 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
                     updateOrder.setCfStartTime(time);*/
                     updateOrder.setCfId(userID);
                     updateOrder.setStatus(2);
+                    getPresenter().UpdateOrder(updateOrder,position);
                 }else if(updateOrder.getStatus()==2){//按下完成制作
                   /*  Date now = new Date();
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//可以方便地修改日期格式
@@ -713,10 +740,21 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
                         e.printStackTrace();
                     }*/
                     updateOrder.setStatus(3);
+                    getPresenter().UpdateOrder(updateOrder,position);
+          /*          if(gson==null){
+                        gson=new Gson();
+                    }
+                    GsonTip tip=new GsonTip();
+                    tip.setOrderId(updateOrder.getOrderId());
+                    tip.setShopId(updateOrder.getShopId());
+                    tip.setStatus(updateOrder.getStatus());
+                    tip.setType(updateOrder.getType());
+                    OrderActivity.this.sendText(gson.toJson(tip));//推送给厨房*/
+
                 }else if(updateOrder.getStatus()==3){
                    return;
                 }
-                getPresenter().UpdateOrder(updateOrder,position);
+
 
                 break;
 
@@ -884,13 +922,47 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
 
     @Override
     public void onMessageResponse(Response message) {
-        ToastUtils.showLong("新订单提醒");
         System.out.println("新消息提示"+message.getResponseText());
+        if(gson==null){
+            gson=new Gson();
+        }
+        if(message.getResponseText().contains("clientMsg")){//app端推送的东西
+            clientMsg clientMsg= gson.fromJson( message.getResponseText() , clientMsg.class ) ;
+            showTip(clientMsg.getClientMsg());
+        }else{ //服务器推送的东西
+            showTip(message.getResponseText());
+
+        }
+
+    }
+
+    private void showTip(String message) {
+        GsonTip newTip= gson.fromJson(message , GsonTip.class ) ;
+        System.out.println("newTip.getShopId()"+newTip.getShopId()+"shopId"+shopId);
+        if(newTip.getShopId().equals(String.valueOf(shopId))){
+
+            if(newTip.getStatus()==1) { //新订单提醒
+                showMusicTip();
+                ToastUtils.showLong("新订单");
+                if(newTip.getType()==1){//外卖提醒
+                    wm_badeg_but.setBadgeText("");
+                }else{//自取提醒
+                    zq_badeg_but.setBadgeText("");
+                }
+
+            }
+        }
 
     }
 
     @Override
     public void onSendMessageError(ErrorResponse error) {
         System.out.println("新消息错误"+error.getResponseText());
+    }
+
+    private void showMusicTip() {
+        if(!mPlayer.isPlaying()){
+            mPlayer.play();
+        }
     }
 }

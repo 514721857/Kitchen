@@ -61,9 +61,13 @@ public class OrderPresenter extends BasePresenter<OrderView> {
             @Override
             public void onResult(Object result) {
                 Result<OrderRespons> temp=(Result<OrderRespons>)result;
-                System.out.println("显示条数"+temp.content.getTotalElements());
+
+
                 if(temp.status.equals("200")){
-                    getView().showResult(temp.content.getData());
+                    if(temp.content!=null){
+                        getView().showResult(temp.content.getData());
+                    }
+
                 }else{
                     getView().showResultOnErr(temp.message);
 
