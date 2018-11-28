@@ -586,7 +586,7 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
     protected void initView() {
         super.initView();
 
-        mPlayer = SoundPoolPlayer.create(this, R.raw.newtip);
+        mPlayer = SoundPoolPlayer.create(this, R.raw.threeo);
         mPlayer.setOnCompletionListener(
                 new MediaPlayer.OnCompletionListener() {
                     @Override
