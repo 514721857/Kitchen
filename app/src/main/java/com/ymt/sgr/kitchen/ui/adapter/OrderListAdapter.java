@@ -60,6 +60,8 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderBean,BaseViewHolder>
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        baseViewHolder.addOnClickListener(R.id.order_btn_dy);
         baseViewHolder.addOnClickListener(R.id.order_btn_phone);
         baseViewHolder.addOnClickListener(R.id.order_list_zt);
        /* new DateTime(new Date()).toDateTime(DateTimeZone.UTC).toDateTimeString("yyyy年MM月dd日 hh时mm分ss秒");
