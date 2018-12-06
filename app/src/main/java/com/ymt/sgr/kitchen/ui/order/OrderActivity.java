@@ -752,7 +752,13 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
                     OrderActivity.this.sendText(gson.toJson(tip));//推送给厨房*/
 
                 }else if(updateOrder.getStatus()==3){
-                   return;
+                    if(updateOrder.getType()==0){
+                        updateOrder.setStatus(4);
+                        getPresenter().UpdateOrder(updateOrder,position);
+                    }
+
+                }else{
+                    return;
                 }
 
 
@@ -771,6 +777,7 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
                 if (isConnect) {
 
                     try {
+
                         binder.write(PrintContent(temp1), new UiExecute() {//打印
                             @Override
                             public void onsucess() {
@@ -848,6 +855,26 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
         }else{
             buf.setLength(0);
         }
+
+        buf.append(" ");
+        buf.append("\r\n");
+        buf.append(" ");
+        buf.append("\r\n");
+        buf.append(" ");
+        buf.append(" ");
+        buf.append(" ");
+        buf.append("乡遇小时代");
+        buf.append(" ");
+        buf.append("\r\n");
+        buf.append(" ");
+        buf.append("\r\n");
+        buf.append(" ");
+        buf.append(" ");
+        buf.append(" ");
+        buf.append(" ");
+        buf.append(" ");
+        buf.append("--------滑浓大");
+
         buf.append(" ");
         buf.append("\r\n");
         buf.append(" ");
@@ -872,6 +899,15 @@ public class OrderActivity extends MvpWebSocketActivity<OrderView,OrderPresenter
         buf.append(result.getSummary());
         buf.append("\r\n");
         buf.append( "送达时间："+ OrderStatus.TimeFormat(result.getSendTime()));
+        buf.append("\r\n");
+        buf.append(" ");
+        buf.append("\r\n");
+        buf.append(" ");
+        buf.append("\r\n");
+        buf.append(" ");
+        buf.append(" ");
+        buf.append(" ");
+        buf.append( "专注品质美味");
         buf.append("\r\n");
         buf.append(" ");
         buf.append("\r\n");

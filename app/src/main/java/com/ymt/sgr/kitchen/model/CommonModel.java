@@ -22,7 +22,7 @@ import static android.content.Context.MODE_PRIVATE;
  * E-mail:510278658@qq.com
  */
 public class CommonModel extends BaseModel {
-
+    String userID;
     String token;
     SharedPreferences pref ;
     int shopId;;
@@ -31,6 +31,7 @@ public class CommonModel extends BaseModel {
         pref = context.getSharedPreferences(AppCon.USER_KEY,MODE_PRIVATE);
         token= pref.getString(AppCon.SCCESS_TOKEN_KEY,"");
         shopId=pref.getInt(AppCon.USER_SHOP_ID,0);
+        userID= pref.getString(AppCon.USER_USER_ID,"");
     }
 
     /**
@@ -79,6 +80,9 @@ public class CommonModel extends BaseModel {
         order.setPageSize(10);
         order.setCurrPage(page);
         order.setStatus(status);
+        if(status>1){
+            order.setCfId(userID);
+        }
         order.setType(type);
         order.setShopId(shopId);
         Gson gson=new Gson();

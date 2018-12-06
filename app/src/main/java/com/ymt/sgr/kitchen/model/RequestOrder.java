@@ -12,7 +12,15 @@ public class RequestOrder {
     String address;
     int shopId;
     int type;
+    String cfId;
 
+    public String getCfId() {
+        return cfId;
+    }
+
+    public void setCfId(String cfId) {
+        this.cfId = cfId;
+    }
 
     public int getType() {
         return type;
